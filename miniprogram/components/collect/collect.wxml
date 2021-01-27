@@ -1,0 +1,7 @@
+<!--components/collect/collect.wxml-->
+<!-- <text>components/collect/collect.wxml</text> -->
+<view class="collect-container">
+  <image src="{{collect.picUrl}}" class="collect-img"></image>
+  <text class="collect-collectcount">{{collect.collectCount}}</text>
+  <view class="collect-name">{{collect.name}}</view>
+</view>

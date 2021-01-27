@@ -1,2 +1,7 @@
 <!--pages/profile/profile.wxml-->
-<text>pages/profile/profile.wxml</text>
+<text class="title">我喜欢</text>
+<view class="collect-container">
+<block wx:for="{{collect}}" wx:key="id">
+  <collect collect="{{item}}"></collect>
+</block>
+</view>

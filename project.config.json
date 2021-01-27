@@ -40,6 +40,7 @@
   "appid": "wxb7eeca10b95b66e8",
   "projectname": "God's%20voice",
   "libVersion": "2.14.1",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {
     "plugin": {
       "list": []
