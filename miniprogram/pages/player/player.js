@@ -2,14 +2,15 @@
 let musiclist = []
 // 正在播放歌曲的index
 let playingIndex = 0
+const backgroundAudioManager = wx.getBackgroundAudioManager()
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    picUrl: ' '
-
+    picUrl: ' ',
+    isPlaying: false
   },
 
   /**
@@ -17,10 +18,16 @@ Page({
    */
   onLoad: function (options) {
     console.log(options)
-    console.log(options.musicId, typeof (options. musicId))
+    console.log(options.musicId, typeof (options.musicId))
     playingIndex = options.index
     musiclist = wx.getStorageSync('musiclist')
     this._loadMusicDatail(options.musicId)
+  },
+  togglePlaying() {
+    this.setData({
+      isPlaying: !this.data.isPlaying
+    })
+
   },
   _loadMusicDatail(musicId) {
     let music = musiclist[playingIndex]
@@ -29,7 +36,7 @@ Page({
       title: music.name,
     })
     this.setData({
-      picUrl:music.al.picUrl
+      picUrl: music.al.picUrl
 
     })
     wx.cloud.callFunction({
@@ -40,6 +47,52 @@ Page({
       }
     }).then((res) => {
       console.log(res)
+      const url = res.result.data[0].url
+      if (url === null) {
+        wx.showToast({
+          title: '没有权限播放'
+        })
+        backgroundAudioManager.pause()
+        this.setData({
+          isPlaying: false
+        })
+        return
+      }
+      backgroundAudioManager.src = url
+      backgroundAudioManager.title = music.name
+      backgroundAudioManager.coverImgUrl = music.al.picUrl
+      backgroundAudioManager.singer = music.ar[0].name
+      this.setData({
+        isPlaying: true
+      })
+      wx.hideLoading()
     })
+  },
+  togglePlaying() {
+    if (this.data.isPlaying) {
+      backgroundAudioManager.pause()
+    } else {
+      backgroundAudioManager.play()
+    }
+    this.setData({
+      isPlaying: !this.data.isPlaying
+    })
+  },
+  onPrev() {
+    playingIndex--
+    if (playingIndex < 0) {
+      playingIndex = musiclist.length - 1
+    }
+    this._loadMusicDatail(musiclist[playingIndex].id)
+
+
+  },
+  onNext() {
+    playingIndex++
+    if (playingIndex === musiclist.length) {
+      playingIndex = 0
+    }
+    this._loadMusicDatail(musiclist[playingIndex].id)
+
   }
 })

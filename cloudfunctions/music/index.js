@@ -9,7 +9,8 @@ const TcbRouter = require('tcb-router')
 //引入axios
 const axios = require('axios')
 //定义基础URL，修改自己的穿透地址
-const BASE_URL = 'https://wxxcx.cn1.utools.club'
+// 改用了老师阿里云的API
+const BASE_URL = 'http://47.98.169.198:3000/'
 
 // 云函数入口函数
 exports.main = async (event, context) => {
