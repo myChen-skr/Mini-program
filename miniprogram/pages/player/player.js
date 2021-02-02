@@ -10,9 +10,13 @@ Page({
    */
   data: {
     picUrl: ' ',
-    isPlaying: false
+    isPlaying: false,
+    name: '',
+    singer: '',
+    isLyricShow: false,
+    lyric: '传给歌词组件的歌词'
   },
-  
+
 
   /**
    * 生命周期函数--监听页面加载
@@ -67,6 +71,24 @@ Page({
         isPlaying: true
       })
       wx.hideLoading()
+      // 请求歌词
+      wx.cloud.callFunction({
+        name: 'music',
+        data: {
+          musicId,
+          $url: 'lyric',
+        }
+      }).then((res) => {
+        console.log(res)
+        let lyric = '暂无歌词'
+        const lrc = res.result.lrc
+        if (lrc) {
+          lyric = lrc.lyric
+        }
+        this.setData({
+          lyric
+        })
+      })
     })
   },
   togglePlaying() {
@@ -77,6 +99,11 @@ Page({
     }
     this.setData({
       isPlaying: !this.data.isPlaying
+    })
+  },
+  onLyricShow() {
+    this.setData({
+      isLyricShow: !this.data.isLyricShow
     })
   },
   onPrev() {
